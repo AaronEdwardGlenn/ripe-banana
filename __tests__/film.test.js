@@ -5,6 +5,7 @@ const request = require('supertest');
 const connect = require('../lib/utils/connect');
 const Studios = require('../lib/models/Studio');
 const Films = require('../lib/models/Film');
+const Actors = require('../lib/models/Actor');
 
 describe('tests the studio routes', () => {
     
@@ -22,6 +23,7 @@ describe('tests the studio routes', () => {
     
   let studio;
   let film;
+  let actor; 
   beforeEach(async() => {
     studio = await Studios.create({
       name: 'Calvin Coolidge',
@@ -35,34 +37,19 @@ describe('tests the studio routes', () => {
       title: 'Polonius is Cool',
       studio: studio.id,
     });
+    actor = await Actors.create({
+      name: 'Mr. Actor',
+      dob: new Date(),
+      pob: new Date()
+    });
   });
-  
-  it('gets all the studios', () => {
+
+  it('can create an actor with a post route', () => {
     return request(app)
-      .get('/api/v1/studios')
-      .then(res => {
-        expect(res.body).toEqual([{
-          _id: studio.id,
-          name: 'Calvin Coolidge'
-        }]);
-      });
-  });
-  it('gets a studio by id', () => {
-    return request(app)
-      .get(`/api/v1/studios/${studio._id}`)
+      .get('/api/v1/actors')
       .then(res => {
         expect(res.body).toEqual({
-          _id: studio.id,
-          name: 'Calvin Coolidge',
-          address: {
-            name: '420 Herb st.',
-            state: 'Oregon',
-            country: 'Austria'
-          }, 
-          films: [{
-            _id: film.id,
-            title: 'Polonius is Cool'
-          }]
+
         });
       });
   });
