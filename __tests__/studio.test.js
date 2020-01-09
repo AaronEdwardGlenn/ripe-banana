@@ -26,7 +26,7 @@ describe('tests the studio routes', () => {
     studio = await Studios.create({
       name: 'Calvin Coolidge',
       address: {
-        name: '420 Herb st.',
+        city: 'Portland',
         state: 'Oregon',
         country: 'Austria'
       }
@@ -47,15 +47,17 @@ describe('tests the studio routes', () => {
         }]);
       });
   });
+
   it('gets a studio by id', () => {
     return request(app)
       .get(`/api/v1/studios/${studio._id}`)
       .then(res => {
+        
         expect(res.body).toEqual({
           _id: studio.id,
           name: 'Calvin Coolidge',
           address: {
-            name: '420 Herb st.',
+            city: 'Portland',
             state: 'Oregon',
             country: 'Austria'
           }, 

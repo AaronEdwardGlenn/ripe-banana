@@ -42,15 +42,17 @@ describe('tests the studio routes', () => {
       dob: new Date(),
       pob: new Date()
     });
-  });
-
-  it('can create an actor with a post route', () => {
-    return request(app)
-      .get('/api/v1/actors')
-      .then(res => {
-        expect(res.body).toEqual({
-
+  
+    it('can create a film with a post route', () => {
+      return request(app)
+        .post('/api/v1/films')
+        .populate('studios', { title: true })
+        .select({ __v: false })      .then(res => {
+          expect(res.body).toEqual({
+            title: 'Polonius is Cool',
+            studio: studio.id
+          });
         });
-      });
+    });
   });
 });
