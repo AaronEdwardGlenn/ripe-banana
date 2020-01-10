@@ -5,8 +5,7 @@ const request = require('supertest');
 const connect = require('../lib/utils/connect');
 
 const Reviewer = require('../lib/models/Reviewer');
-const Review = require('../lib/models/Review');
-const Studio = require('../lib/models/Studio');
+const Studios = require('../lib/models/Studio');
 const Film = require('../lib/models/Film');
 const Actor = require('../lib/models/Actor');
 
@@ -21,10 +20,13 @@ describe('tests the reviewer routes', () => {
   });
     
   let reviewer; 
+  // eslint-disable-next-line no-unused-vars
   let review;
-  let Studio;
-  let Film;
-  let Actor; 
+  // eslint-disable-next-line no-unused-vars
+  let studio;
+  // eslint-disable-next-line no-unused-vars
+  let film;
+  let actor; 
 
   
   beforeEach(async() => {
@@ -33,6 +35,28 @@ describe('tests the reviewer routes', () => {
       name: 'Mr. Reviewer',
       company: 'Company.co'
     });
+    studio = await Studios.create({
+      name: 'Calvin Coolidge',
+      address: {
+        city: 'Portland',
+        state: 'OR',
+        country: 'USA'
+      }
+    });
+    actor = await Actor.create({
+      name: 'Calvin Coolidge',
+      dob: new Date(),
+      pob: 'Tazmania'
+    });
+    film = await Film.create({
+      title: 'Calvin Coolidge Documentary',
+      studio: mongoose.Types.ObjectId(),
+      cast: [{ 
+        role: 'cool guy',
+        actor: actor._id
+      }]
+    });
+
   });
   
   afterAll(() => {

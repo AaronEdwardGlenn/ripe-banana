@@ -41,7 +41,7 @@ describe('tests the studio routes', () => {
     actor = await Actor.create({
       name: 'Mr. Actor',
       dob: new Date(),
-      pob: new Date()
+      pob: 'Tazmania'
     });
   });
   
@@ -96,8 +96,7 @@ describe('tests the studio routes', () => {
           studio: {
             _id: expect.any(String),
             name: 'Calvin Coolidge',
-          },
-          __v: 0
+          }
         });
       });
   });
