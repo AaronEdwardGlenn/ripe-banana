@@ -5,7 +5,7 @@ const request = require('supertest');
 const connect = require('../lib/utils/connect');
 const Studios = require('../lib/models/Studio');
 const Films = require('../lib/models/Film');
-const Actors = require('../lib/models/Actor');
+const Actor = require('../lib/models/Actor');
 
 describe('tests the studio routes', () => {
     
@@ -17,13 +17,11 @@ describe('tests the studio routes', () => {
     return mongoose.connection.dropDatabase(); 
   });
     
-  afterAll(() => {
-    return mongoose.connection.close(); 
-  });
-    
+  
   let studio;
   let film;
   let actor; 
+  
   beforeEach(async() => {
     studio = await Studios.create({
       name: 'Calvin Coolidge',
@@ -33,26 +31,75 @@ describe('tests the studio routes', () => {
         country: 'Austria'
       }
     });  
+    
     film = await Films.create({
       title: 'Polonius is Cool',
       studio: studio.id,
+      released: 2000
     });
-    actor = await Actors.create({
+    
+    actor = await Actor.create({
       name: 'Mr. Actor',
       dob: new Date(),
       pob: new Date()
     });
+  });
   
-    it('can create a film with a post route', () => {
-      return request(app)
-        .post('/api/v1/films')
-        .populate('studios', { title: true })
-        .select({ __v: false })      .then(res => {
-          expect(res.body).toEqual({
-            title: 'Polonius is Cool',
-            studio: studio.id
-          });
+  afterAll(() => {
+    return mongoose.connection.close(); 
+  });
+
+  it('can create a film with a post route', () => {
+    return request(app)
+      .post('/api/v1/films')
+      .send({
+        title: 'cool new film',
+        studio: studio._id,
+        cast: []
+      })  
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          title: 'cool new film',
+          studio: studio._id.toString(),
+          cast: expect.any(Array),
+          __v: 0
         });
-    });
+          
+      }); 
+  });
+  
+  it('can get all films via GET route', () => {
+    return request(app)
+      .get('/api/v1/films')
+      .then(res => {
+        expect(res.body).toEqual([{
+          _id: film.id.toString(),
+          title: 'Polonius is Cool',
+          released: 2000,
+          studio: studio._id.toString()
+        }]);
+      });  
+  });
+
+  it('can get a film by id via GET route', () => {
+    return request(app)
+      .get(`/api/v1/films/${film.id}`)
+      .then(res => {
+        console.log(res.body);
+        
+        expect(res.body).toEqual({
+          _id: film.id.toString(),
+          title: 'Polonius is Cool',
+          released: 2000,
+          cast: expect.any(Array),
+          studio: {
+            _id: expect.any(String),
+            name: 'Calvin Coolidge',
+          },
+          __v: 0
+        });
+      });
   });
 });
+
