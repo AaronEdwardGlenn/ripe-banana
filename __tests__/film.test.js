@@ -89,10 +89,11 @@ describe('tests the studio routes', () => {
         console.log(res.body);
         
         expect(res.body).toEqual({
-          _id: film.id.toString(),
+          // _id: expect.any(String),
           title: 'Polonius is Cool',
           released: 2000,
           cast: expect.any(Array),
+          reviews: expect.any(Array),
           studio: {
             _id: expect.any(String),
             name: 'Calvin Coolidge',

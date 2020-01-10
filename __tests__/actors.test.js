@@ -27,9 +27,7 @@ describe('tests the actor routes', () => {
       name: 'Mr. Actor',
       dob: new Date(),
       pob: 'Tazmania'
-    });
-    console.log('created model', actor);
-    
+    });    
   });
   
   afterAll(() => {
